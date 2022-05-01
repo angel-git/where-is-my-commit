@@ -20,7 +20,7 @@ fn main() {
 		flag: .string
 		name: 'branch'
 		abbrev: 'b'
-		default_value: ['x-maintenance']
+		default_value: ['']
 		description: 'Containing branch name that you want to filter'
 	})
 
@@ -28,7 +28,7 @@ fn main() {
 		flag: .string
 		name: 'tag'
 		abbrev: 't'
-		default_value: ['xl-release-']
+		default_value: ['']
 		description: 'Containing tag name that you want to filter'
 	})
 

@@ -18,4 +18,14 @@ Flags:
 Example:
 ```
 gw search -tag MY_TAG_NAME -branch MY_BRANCHES D-19007
+
+Searching for D-19007 in branches MY_BRANCHES and tags MY_TAG_NAME
+Branches:
+origin/10.0.MY_BRANCHES
+origin/10.1.MY_BRANCHES
+Tags:
+MY_TAG_NAME-10.0.10
+MY_TAG_NAME-10.0.11
+MY_TAG_NAME-10.0.12
+MY_TAG_NAME-10.0.12-alp
 ```
