@@ -1,6 +1,7 @@
 module main
 import os
 import cli
+import chalk
 
 fn main() {
 	mut cmd := cli.Command{
@@ -37,13 +38,16 @@ fn main() {
 }
 
 fn search(cli_command cli.Command) ? {
-		branch := cli_command.flags.get_string('branch') or { panic('Failed to get `branch` flag: $err') }
+	branch := cli_command.flags.get_string('branch') or { panic('Failed to get `branch` flag: $err') }
 	tag := cli_command.flags.get_string('tag') or { panic('Failed to get `tag` flag: $err') }
 	message := cli_command.args[0]
 
+	println("Searching for ${chalk.style(message, 'bold')} in branches ${chalk.style(branch, 'bold')} and tags ${chalk.style(tag, 'bold')}")
 	branches:= search_branches(message, branch)
 	tags := search_tag(message, tag)
+	println(chalk.fg('Branches:', 'green'))
 	println(branches)
+	println(chalk.fg('Tags:', 'green'))
 	println(tags)
 }
 
