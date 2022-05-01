@@ -73,13 +73,13 @@ fn execute_command(command string, filter string) string {
 		path: command
 		redirect_stdout: true
 	}
-	cmd.start() or {}
+	cmd.start() or { panic('Failed to start git command: $err') }
 	for !cmd.eof {
 		line := cmd.read_line().trim_space()
 		if line.len > 0 && line.contains(filter) {
 			s += '$line\n'
 		}
 	}
-	cmd.close() or {}
+	cmd.close() or { panic('Failed to stop git command: $err') }
 	return s
 }
