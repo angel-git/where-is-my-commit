@@ -1,7 +1,6 @@
 module main
 import os
 import cli
-// import spinners { Spinner }
 
 fn main() {
 	mut cmd := cli.Command{
@@ -33,17 +32,12 @@ fn main() {
 	})
 
 	cmd.add_command(search_cmd)
-	cmd.setup()
-
-	// mut sp := Spinner{}
-	// sp.start("Searching...") ?
+	cmd.setup()	
 	cmd.parse(os.args)
-	// sp.stop()
-	println('Hello World!')
 }
 
 fn search(cli_command cli.Command) ? {
-	branch := cli_command.flags.get_string('branch') or { panic('Failed to get `branch` flag: $err') }
+		branch := cli_command.flags.get_string('branch') or { panic('Failed to get `branch` flag: $err') }
 	tag := cli_command.flags.get_string('tag') or { panic('Failed to get `tag` flag: $err') }
 	message := cli_command.args[0]
 
