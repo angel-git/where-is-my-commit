@@ -16,6 +16,7 @@ Flags:
 ```
 
 Example:
+
 ```
 gw search -tag MY_TAG_NAME -branch MY_BRANCHES D-19007
 
@@ -28,4 +29,15 @@ MY_TAG_NAME-10.0.10
 MY_TAG_NAME-10.0.11
 MY_TAG_NAME-10.0.12
 MY_TAG_NAME-10.0.12-alp
+```
+
+## Building
+
+```bash
+# for linux
+v -os linux . -o build/gw-linux
+# for mac
+v . -o build/gw-mac
+# for windows, this doesnt work from M1
+v -os windows . -o build/gw-win
 ```
