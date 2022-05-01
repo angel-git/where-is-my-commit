@@ -46,12 +46,12 @@ fn search(cli_command cli.Command) ? {
 	branches:= search_branches(message, branch)
 	tags := search_tag(message, tag)
 	println(chalk.fg('Branches:', 'green'))
-	println(branches)
+	for b in branches { println(b) }
 	println(chalk.fg('Tags:', 'green'))
-	println(tags)
+	for t in tags { println(t) }
 }
 
-fn search_branches(commit_message string, branch string) string {
+fn search_branches(commit_message string, branch string) []string {
 	git_command :='
 		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
         do
@@ -61,7 +61,7 @@ fn search_branches(commit_message string, branch string) string {
 	return execute_command(git_command, branch)
 }
 
-fn search_tag(commit_message string, tag string) string {
+fn search_tag(commit_message string, tag string) []string {
 	git_command :='
 		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
         do
@@ -71,8 +71,8 @@ fn search_tag(commit_message string, tag string) string {
 	return execute_command(git_command, tag)
 }
 
-fn execute_command(command string, filter string) string {
-	mut s := ''
+fn execute_command(command string, filter string) []string {
+	mut s := []string{}
 	mut cmd := os.Command{
 		path: command
 		redirect_stdout: true
@@ -81,9 +81,10 @@ fn execute_command(command string, filter string) string {
 	for !cmd.eof {
 		line := cmd.read_line().trim_space()
 		if line.len > 0 && line.contains(filter) {
-			s += '$line\n'
+			s << line
 		}
 	}
 	cmd.close() or { panic('Failed to stop git command: $err') }
+	s.sort()
 	return s
 }
