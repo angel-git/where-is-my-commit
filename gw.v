@@ -5,7 +5,7 @@ import chalk
 
 fn main() {
 	mut cmd := cli.Command{
-		name: 'gs'
+		name: 'gw'
 		description: 'Where is my commit?\nUsage: gs search -help'
 		version: '1.0.0'
 	}

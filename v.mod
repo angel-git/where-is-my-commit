@@ -1,5 +1,5 @@
 Module {
-	name: 'vlang-test'
+	name: 'gw'
 	description: ''
 	version: ''
 	license: ''
