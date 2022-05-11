@@ -93,7 +93,11 @@ fn diff(cli_command cli.Command) ? {
 
 	git_command :='git log --oneline ${tag1}..${tag2}'
 	diff_commits := execute_command(ExecuteCommand{command: git_command, filter: "", sort: false})
-	for d in diff_commits { println(d) }
+	for d in diff_commits { 
+		commit_id := d.all_before(" ")
+		commit_message := d.after_char(` `)
+		println('${chalk.fg(commit_id, 'green')} ${commit_message}')
+	}
 }
 
 fn execute_command(execute_command ExecuteCommand) []string {
