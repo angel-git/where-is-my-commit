@@ -4,6 +4,8 @@ Simple pet project to find commits by commit message inside branches and tags. B
 
 ## Usage
 
+### Find commits in branches and tags
+
 ```
 Usage: gw search [flags] <commit message>
 
@@ -31,6 +33,17 @@ MY_TAG_NAME-10.0.12
 MY_TAG_NAME-10.0.12-alp
 ```
 
+### Commits between 2 tags
+
+```
+Usage: gw diff <tag1> <tag2>
+
+Shows the commits between 2 tags
+
+Flags:
+      -help           Prints help information.
+```
+
 ## Building
 
 ```bash
@@ -38,6 +51,6 @@ MY_TAG_NAME-10.0.12-alp
 v -os linux . -o build/gw-linux
 # for mac
 v . -o build/gw-mac
-# for windows, this doesnt work from M1
+# for windows
 v -os windows . -o build/gw-win
 ```
