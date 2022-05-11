@@ -51,6 +51,6 @@ Flags:
 v -os linux . -o build/gw-linux
 # for mac
 v . -o build/gw-mac
-# for windows, this doesnt work from M1
+# for windows
 v -os windows . -o build/gw-win
 ```
