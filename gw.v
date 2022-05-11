@@ -3,11 +3,18 @@ import os
 import cli
 import chalk
 
+struct ExecuteCommand {
+  command string
+  filter string
+  sort bool = true
+}
+
+
 fn main() {
 	mut cmd := cli.Command{
 		name: 'gw'
-		description: 'Where is my commit?\nUsage: gs search -help'
-		version: '1.0.0'
+		description: 'Where is my commit?\nUsage:\ngw search -help\ngw diff -help'
+		version: '1.1.0'
 	}
 	mut search_cmd := cli.Command{
 		name: 'search'
@@ -32,7 +39,16 @@ fn main() {
 		description: 'Containing tag name that you want to filter'
 	})
 
+	mut diff_cmd := cli.Command{
+		name: 'diff'
+		description: 'Shows the commits between 2 tags'
+		usage: '<tag1> <tag2>'
+		required_args: 2
+		execute: diff
+	}
+
 	cmd.add_command(search_cmd)
+	cmd.add_command(diff_cmd)
 	cmd.setup()	
 	cmd.parse(os.args)
 }
@@ -58,7 +74,7 @@ fn search_branches(commit_message string, branch string) []string {
                 git branch -r --contains \$sha1
         done
 		'
-	return execute_command(git_command, branch)
+	return execute_command(ExecuteCommand{command: git_command, filter: branch})
 }
 
 fn search_tag(commit_message string, tag string) []string {
@@ -68,23 +84,34 @@ fn search_tag(commit_message string, tag string) []string {
                 git tag --contains \$sha1
         done
 		'
-	return execute_command(git_command, tag)
+	return execute_command(ExecuteCommand{command: git_command, filter: tag})
 }
 
-fn execute_command(command string, filter string) []string {
+fn diff(cli_command cli.Command) ? {
+	tag1 := cli_command.args[0]
+	tag2 := cli_command.args[1]
+
+	git_command :='git log --oneline ${tag1}..${tag2}'
+	diff_commits := execute_command(ExecuteCommand{command: git_command, filter: "", sort: false})
+	for d in diff_commits { println(d) }
+}
+
+fn execute_command(execute_command ExecuteCommand) []string {
 	mut s := []string{}
 	mut cmd := os.Command{
-		path: command
+		path: execute_command.command
 		redirect_stdout: true
 	}
 	cmd.start() or { panic('Failed to start git command: $err') }
 	for !cmd.eof {
 		line := cmd.read_line().trim_space()
-		if line.len > 0 && line.contains(filter) {
+		if line.len > 0 && line.contains(execute_command.filter) {
 			s << line
 		}
 	}
 	cmd.close() or { panic('Failed to stop git command: $err') }
-	s.sort()
+	if execute_command.sort {
+		s.sort() 
+	}
 	return s
 }
