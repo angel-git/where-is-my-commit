@@ -6,9 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-
-  build-linux:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -17,19 +19,19 @@ jobs:
         with:
           version: 0.2.4
       - name: build
-        run: v -os linux . -o build/gw-linux
+        run: v . -o build/gw -prod
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
-          name: linux
-          path: build/gw_linux
+          name: ${{ matrix.os }}/gw-${{ matrix.os }}
+          path: build/gw
 
   publish:
-    needs: [build-linux]
-    runs-on: ubuntu-20.04
+    needs: [build]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [linux]
+        version: [ "ubuntu-latest", "macos-latest", "windows-latest"]
     steps:
       - name: Get tag name
         id: tag
