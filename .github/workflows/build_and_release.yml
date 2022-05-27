@@ -9,53 +9,46 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
+        include:
+          - os: ubuntu-latest
+            name: linux
+            extension: ''
+          - os: macos-latest
+            name: macos
+            extension: ''
+          - os: windows-latest
+            name: windows
+            extension: .exe
     runs-on: ${{ matrix.os }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: install V
-        uses: vlang/setup-v@v1
-        with:
-          version: 0.2.4
-      - name: build
-        run: v . -o build/gw -prod
-      - name: Create artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.os }}/gw-${{ matrix.os }}
-          path: build/gw
-
-  publish:
-    needs: [build]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [ "ubuntu-latest", "macos-latest", "windows-latest"]
     steps:
       - name: Get tag name
         id: tag
+        shell: bash
         run: |
-          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
-      - uses: actions/checkout@v2
-      - name: Fetch artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: ${{ matrix.version }}
-          path: ./${{ matrix.version }}
+          echo "::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}"
       - name: Get release
         id: get_release_info
         uses: leahlundqvist/get-release@v1.3.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.tag.output.SOURCE_TAG }}
+          tag_name: ${{ steps.tag.outputs.SOURCE_TAG }}
+      - name: install V
+        uses: vlang/setup-v@v1
+        with:
+          check-latest: true
+          stable: true
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: build
+        run: v . -o build/gw -prod
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.1
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.token }}
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ${{ matrix.version }}/gw_${{ matrix.version }}
-          asset_name: gw_${{ matrix.version }}
+          asset_path: build/gw${{ matrix.extension }}
+          asset_name: gw-${{ steps.tag.outputs.SOURCE_TAG }}-${{ matrix.name }}.zip
+          asset_content_type: application/zip
