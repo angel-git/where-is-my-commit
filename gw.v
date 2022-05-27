@@ -14,7 +14,7 @@ fn main() {
 	mut cmd := cli.Command{
 		name: 'gw'
 		description: 'Where is my commit?\nUsage:\ngw search -help\ngw diff -help'
-		version: '1.1.0'
+		version: '1.1.1'
 	}
 	mut search_cmd := cli.Command{
 		name: 'search'
