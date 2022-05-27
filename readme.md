@@ -44,13 +44,29 @@ Flags:
       -help           Prints help information.
 ```
 
-## Building
+## Development
+
+Install pre-commit git hook with:
+
+```bash
+git config core.hooksPath ./git-hooks
+```
+
+### Formatting
+
+Example of formatting `gw.v`
+
+```bash
+v fmt -w gw.v
+```
+
+### Building
 
 ```bash
 # for linux
 v -os linux . -o build/gw-linux
 # for mac
-v . -o build/gw-mac
+v -os macos . -o build/gw-mac
 # for windows
 v -os windows . -o build/gw-win
 ```

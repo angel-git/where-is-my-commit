@@ -8,3 +8,4 @@ gw
 *.so
 *.dylib
 *.dll
+.idea
