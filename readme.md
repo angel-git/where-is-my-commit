@@ -64,9 +64,9 @@ v fmt -w gw.v
 
 ```bash
 # for linux
-v -os linux . -o build/gw-linux
+v -os linux . -o build/gw-linux -prod
 # for mac
-v -os macos . -o build/gw-mac
+v -os macos . -o build/gw-mac -prod
 # for windows
-v -os windows . -o build/gw-win
+v -os windows . -o build/gw-win -prod
 ```
