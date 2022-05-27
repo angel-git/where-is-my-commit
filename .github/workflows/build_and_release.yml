@@ -16,6 +16,7 @@ jobs:
         uses: vlang/setup-v@v1
         with:
           stable: true
+      - name: build
         run: v -os linux . -o build/gw-linux
       - name: Create artifact
         uses: actions/upload-artifact@v2
