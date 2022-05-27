@@ -1,14 +1,14 @@
 module main
+
 import os
 import cli
 import chalk
 
 struct ExecuteCommand {
-  command string
-  filter string
-  sort bool = true
+	command string
+	filter  string
+	sort    bool = true
 }
-
 
 fn main() {
 	mut cmd := cli.Command{
@@ -49,54 +49,61 @@ fn main() {
 
 	cmd.add_command(search_cmd)
 	cmd.add_command(diff_cmd)
-	cmd.setup()	
+	cmd.setup()
 	cmd.parse(os.args)
 }
 
 fn search(cli_command cli.Command) ? {
-	branch := cli_command.flags.get_string('branch') or { panic('Failed to get `branch` flag: $err') }
+	branch := cli_command.flags.get_string('branch') or {
+		panic('Failed to get `branch` flag: $err')
+	}
 	tag := cli_command.flags.get_string('tag') or { panic('Failed to get `tag` flag: $err') }
 	message := cli_command.args[0]
 
-	println("Searching for ${chalk.style(message, 'bold')} in branches ${chalk.style(branch, 'bold')} and tags ${chalk.style(tag, 'bold')}")
-	branches:= search_branches(message, branch)
+	println('Searching for ${chalk.style(message, 'bold')} in branches ${chalk.style(branch,
+		'bold')} and tags ${chalk.style(tag, 'bold')}')
+	branches := search_branches(message, branch)
 	tags := search_tag(message, tag)
 	println(chalk.fg('Branches:', 'green'))
-	for b in branches { println(b) }
+	for b in branches {
+		println(b)
+	}
 	println(chalk.fg('Tags:', 'green'))
-	for t in tags { println(t) }
+	for t in tags {
+		println(t)
+	}
 }
 
 fn search_branches(commit_message string, branch string) []string {
-	git_command :='
+	git_command := '
 		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
         do
                 git branch -r --contains \$sha1
         done
 		'
-	return execute_command(ExecuteCommand{command: git_command, filter: branch})
+	return execute_command(ExecuteCommand{ command: git_command, filter: branch })
 }
 
 fn search_tag(commit_message string, tag string) []string {
-	git_command :='
+	git_command := '
 		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
         do
                 git tag --contains \$sha1
         done
 		'
-	return execute_command(ExecuteCommand{command: git_command, filter: tag})
+	return execute_command(ExecuteCommand{ command: git_command, filter: tag })
 }
 
 fn diff(cli_command cli.Command) ? {
 	tag1 := cli_command.args[0]
 	tag2 := cli_command.args[1]
 
-	git_command :='git log --oneline ${tag1}..${tag2}'
-	diff_commits := execute_command(ExecuteCommand{command: git_command, filter: "", sort: false})
-	for d in diff_commits { 
-		commit_id := d.all_before(" ")
+	git_command := 'git log --oneline ${tag1}..$tag2'
+	diff_commits := execute_command(ExecuteCommand{ command: git_command, filter: '', sort: false })
+	for d in diff_commits {
+		commit_id := d.all_before(' ')
 		commit_message := d.after_char(` `)
-		println('${chalk.fg(commit_id, 'green')} ${commit_message}')
+		println('${chalk.fg(commit_id, 'green')} $commit_message')
 	}
 }
 
@@ -115,7 +122,7 @@ fn execute_command(execute_command ExecuteCommand) []string {
 	}
 	cmd.close() or { panic('Failed to stop git command: $err') }
 	if execute_command.sort {
-		s.sort() 
+		s.sort()
 	}
 	return s
 }
