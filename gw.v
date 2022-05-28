@@ -78,7 +78,7 @@ fn search_branches(commit_message string, branch string) []string {
 	git_command := '
 		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
         do
-                git branch -r --contains \$sha1
+                git branch -r --contains \$sha1 | xargs -I {} echo {} "(\$sha1)"
         done
 		'
 	return execute_command(ExecuteCommand{ command: git_command, filter: branch })
@@ -88,7 +88,7 @@ fn search_tag(commit_message string, tag string) []string {
 	git_command := '
 		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
         do
-                git tag --contains \$sha1
+                git tag --contains \$sha1 | xargs -I {} echo {} "(\$sha1)"
         done
 		'
 	return execute_command(ExecuteCommand{ command: git_command, filter: tag })
