@@ -4,6 +4,8 @@ Simple pet project to find commits by commit message inside branches and tags. B
 
 ## Usage
 
+> :warning: **Windows users**: This is just a wrapper of bash scripts using `git` under the hood. Use [Git bash](https://gitforwindows.org) to run this tool.
+
 ### Find commits in branches and tags
 
 ```
