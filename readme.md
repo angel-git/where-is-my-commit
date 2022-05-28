@@ -70,3 +70,7 @@ v -os macos . -o build/gw-mac -prod
 # for windows
 v -os windows . -o build/gw-win -prod
 ```
+
+## If you have money to throw
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/agavalda)
