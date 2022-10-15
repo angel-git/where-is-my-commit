@@ -3,6 +3,7 @@ module main
 import os
 import cli
 import chalk
+import spinner
 
 struct ExecuteCommand {
 	command string
@@ -100,6 +101,7 @@ fn diff(cli_command cli.Command) ? {
 
 	git_command := 'git log --oneline ${tag1}..$tag2'
 	diff_commits := execute_command(ExecuteCommand{ command: git_command, filter: '', sort: false })
+
 	for d in diff_commits {
 		commit_id := d.all_before(' ')
 		commit_message := d.after_char(` `)
@@ -108,6 +110,8 @@ fn diff(cli_command cli.Command) ? {
 }
 
 fn execute_command(execute_command ExecuteCommand) []string {
+	mut sp := spinner.Spinner{}
+	sp.start()
 	mut s := []string{}
 	mut cmd := os.Command{
 		path: execute_command.command
@@ -124,5 +128,6 @@ fn execute_command(execute_command ExecuteCommand) []string {
 	if execute_command.sort {
 		s.sort()
 	}
+	sp.stop()
 	return s
 }
