@@ -49,17 +49,17 @@ const (
 		'reverse':   7
 		'hidden':    8
 	}
-	reset = '${prefix}0$suffix'
+	reset = '${prefix}0${suffix}'
 )
 
 pub fn fg(text string, color string) string {
-	return '$chalk.prefix${chalk.foreground_colors[color]}$chalk.suffix$text$chalk.reset'
+	return '${chalk.prefix}${chalk.foreground_colors[color]}${chalk.suffix}${text}${chalk.reset}'
 }
 
 pub fn bg(text string, color string) string {
-	return '$chalk.prefix${chalk.background_colors[color]}$chalk.suffix$text$chalk.reset'
+	return '${chalk.prefix}${chalk.background_colors[color]}${chalk.suffix}${text}${chalk.reset}'
 }
 
 pub fn style(text string, color string) string {
-	return '$chalk.prefix${chalk.style[color]}$chalk.suffix$text$chalk.reset'
+	return '${chalk.prefix}${chalk.style[color]}${chalk.suffix}${text}${chalk.reset}'
 }

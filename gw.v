@@ -54,11 +54,11 @@ fn main() {
 	cmd.parse(os.args)
 }
 
-fn search(cli_command cli.Command) ? {
+fn search(cli_command cli.Command) ! {
 	branch := cli_command.flags.get_string('branch') or {
-		panic('Failed to get `branch` flag: $err')
+		panic('Failed to get `branch` flag: ${err}')
 	}
-	tag := cli_command.flags.get_string('tag') or { panic('Failed to get `tag` flag: $err') }
+	tag := cli_command.flags.get_string('tag') or { panic('Failed to get `tag` flag: ${err}') }
 	message := cli_command.args[0]
 
 	println('Searching for ${chalk.style(message, 'bold')} in branches ${chalk.style(branch,
@@ -77,7 +77,7 @@ fn search(cli_command cli.Command) ? {
 
 fn search_branches(commit_message string, branch string) []string {
 	git_command := '
-		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
+		for sha1 in `git log --oneline --all --grep "${commit_message}" | cut -d" " -f1`
         do
                 git branch -r --contains \$sha1 | xargs -I {} echo {} "(\$sha1)"
         done
@@ -87,7 +87,7 @@ fn search_branches(commit_message string, branch string) []string {
 
 fn search_tag(commit_message string, tag string) []string {
 	git_command := '
-		for sha1 in `git log --oneline --all --grep "$commit_message" | cut -d" " -f1`
+		for sha1 in `git log --oneline --all --grep "${commit_message}" | cut -d" " -f1`
         do
                 git tag --contains \$sha1 | xargs -I {} echo {} "(\$sha1)"
         done
@@ -95,17 +95,17 @@ fn search_tag(commit_message string, tag string) []string {
 	return execute_command(ExecuteCommand{ command: git_command, filter: tag })
 }
 
-fn diff(cli_command cli.Command) ? {
+fn diff(cli_command cli.Command) ! {
 	tag1 := cli_command.args[0]
 	tag2 := cli_command.args[1]
 
-	git_command := 'git log --oneline ${tag1}..$tag2'
+	git_command := 'git log --oneline ${tag1}..${tag2}'
 	diff_commits := execute_command(ExecuteCommand{ command: git_command, filter: '', sort: false })
 
 	for d in diff_commits {
 		commit_id := d.all_before(' ')
 		commit_message := d.after_char(` `)
-		println('${chalk.fg(commit_id, 'green')} $commit_message')
+		println('${chalk.fg(commit_id, 'green')} ${commit_message}')
 	}
 }
 
@@ -117,14 +117,14 @@ fn execute_command(execute_command ExecuteCommand) []string {
 		path: execute_command.command
 		redirect_stdout: true
 	}
-	cmd.start() or { panic('Failed to start git command: $err') }
+	cmd.start() or { panic('Failed to start git command: ${err}') }
 	for !cmd.eof {
 		line := cmd.read_line().trim_space()
 		if line.len > 0 && line.contains(execute_command.filter) {
 			s << line
 		}
 	}
-	cmd.close() or { panic('Failed to stop git command: $err') }
+	cmd.close() or { panic('Failed to stop git command: ${err}') }
 	if execute_command.sort {
 		s.sort()
 	}

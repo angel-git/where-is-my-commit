@@ -24,7 +24,7 @@ pub fn (mut self Spinner) start() {
 	lock self.state {
 		self.state.running = true
 	}
-	self.running_thread = go self.start_thread()
+	self.running_thread = spawn self.start_thread()
 }
 
 pub fn (mut self Spinner) stop() {
