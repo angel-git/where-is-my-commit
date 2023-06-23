@@ -76,23 +76,24 @@ fn search(cli_command cli.Command) ! {
 }
 
 fn search_branches(commit_message string, branch string) []string {
-	git_command := '
-		for sha1 in `git log --oneline --all --grep "${commit_message}" | cut -d" " -f1`
-        do
-                git branch -r --contains \$sha1 | xargs -I {} echo {} "(\$sha1)"
-        done
-		'
+	git_command := git_log(commit_message, 'git branch -r ')
 	return execute_command(ExecuteCommand{ command: git_command, filter: branch })
 }
 
 fn search_tag(commit_message string, tag string) []string {
-	git_command := '
-		for sha1 in `git log --oneline --all --grep "${commit_message}" | cut -d" " -f1`
-        do
-                git tag --contains \$sha1 | xargs -I {} echo {} "(\$sha1)"
-        done
-		'
+	git_command := git_log(commit_message, 'git tag')
 	return execute_command(ExecuteCommand{ command: git_command, filter: tag })
+}
+
+fn git_log(commit_message string, branch_or_tag_command string) string {
+	return '
+		YELLOW="\033[0;33m"
+		CYAN="\033[0;36m"
+		NC="\033[0m"  
+		git log --format="%h %an" --all --grep "${commit_message}" | while read -r sha1 author; do
+	 		 ${branch_or_tag_command} --contains \$sha1 | xargs -I {} echo {} "\${YELLOW}\$sha1\$NC - \$CYAN\$author\$NC";
+	    done
+		'
 }
 
 fn diff(cli_command cli.Command) ! {
@@ -115,7 +116,7 @@ fn execute_command(execute_command ExecuteCommand) []string {
 	mut s := []string{}
 	mut cmd := os.Command{
 		path: execute_command.command
-		redirect_stdout: true
+		redirect_stdout: false
 	}
 	cmd.start() or { panic('Failed to start git command: ${err}') }
 	for !cmd.eof {
