@@ -24,7 +24,7 @@ jobs:
         id: tag
         shell: bash
         run: |
-          echo "::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}"
+          echo "{SOURCE_TAG}=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       - name: Get release
         id: get_release_info
         uses: leahlundqvist/get-release@v1.3.1
@@ -33,10 +33,9 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.SOURCE_TAG }}
       - name: install V
-        uses: vlang/setup-v@v1
+        uses: vlang/setup-v@v1.3
         with:
-          check-latest: true
-          stable: true
+          version: 0.3.4
       - name: checkout
         uses: actions/checkout@v2
       - name: build
