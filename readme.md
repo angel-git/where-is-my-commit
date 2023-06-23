@@ -26,13 +26,13 @@ gw search -tag MY_TAG_NAME -branch MY_BRANCHES D-19007
 
 Searching for D-19007 in branches MY_BRANCHES and tags MY_TAG_NAME
 Branches:
-origin/10.0.MY_BRANCHES (11e0bd5297)
-origin/10.1.MY_BRANCHES (11e0bd5297)
+origin/10.0.MY_BRANCHES 11e0bd5297 - Author
+origin/10.1.MY_BRANCHES 11e0bd5297 - Author
 Tags:
-MY_TAG_NAME-10.0.10 (21c4e784b6)
-MY_TAG_NAME-10.0.11 (41df034952)
-MY_TAG_NAME-10.0.12 (41df034952)
-MY_TAG_NAME-10.0.12-alp (41df034952)
+MY_TAG_NAME-10.0.10 21c4e784b6 - Author
+MY_TAG_NAME-10.0.11 41df034952 - Author
+MY_TAG_NAME-10.0.12 41df034952 - Author
+MY_TAG_NAME-10.0.12-alp 41df034952 - Author
 ```
 
 ### Commits between 2 tags
