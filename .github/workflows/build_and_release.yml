@@ -24,7 +24,7 @@ jobs:
         id: tag
         shell: bash
         run: |
-          echo "{SOURCE_TAG}=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       - name: Get release
         id: get_release_info
         uses: leahlundqvist/get-release@v1.3.1
