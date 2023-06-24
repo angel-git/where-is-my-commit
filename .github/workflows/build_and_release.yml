@@ -27,11 +27,11 @@ jobs:
           echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       - name: Get release
         id: get_release_info
-        uses: leahlundqvist/get-release@v1.3.1
+        uses: cardinalby/git-get-release-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.tag.outputs.SOURCE_TAG }}
+          tag: ${{ steps.tag.outputs.SOURCE_TAG }}
       - name: install V
         uses: vlang/setup-v@v1.3
         with:
