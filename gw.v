@@ -91,7 +91,7 @@ fn git_log(commit_message string, branch_or_tag_command string) string {
 		CYAN="\033[0;36m"
 		GREEN="\033[0;34m"
 		NC="\033[0m"
-		git log --format="%h %an %cd" --date=short --all --grep "${commit_message}" | while read -r sha1 author date; do
+		git log --format="%h %cd %an" --date=short --all --grep "${commit_message}" | while read -r sha1 date author; do
 	 		 ${branch_or_tag_command} --contains \$sha1 | xargs -I {} echo {} "\${YELLOW}\$sha1\$NC - \$CYAN\$author\$NC \$GREEN(\$date)\$NC";
 	    done
 		'
